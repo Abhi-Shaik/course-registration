@@ -11,23 +11,26 @@ const SearchField = ({ onSearch }) => {
   };
 
   return (
-    <div style={{fontSize: "2.5vh"}}>
+    <div style={{fontSize: "2.5vh", display: "flex",alignContent: "center" }}>
       {/* <label htmlFor="search">Search:</label> */}
-      icon
+      <h4>Search
+        </h4>
       <input
         type="text"
         id="search"
         value={searchTerm}
         onChange={handleInputChange}
-        placeholder="Enter your search term"
+        placeholder="Enter Program name..."
         className='can'
         
         style={{
             width: "17vw",
+            height: "2vh",
             padding: "1%",
-            border: 'none', outline: 'none',
+            // border: 'none', outline: 'none',
             marginLeft: '1vw',
-            fontSize: '2.5vh'
+            fontSize: '2.5vh',
+            marginTop: '2.9vh'
         }}
         // className="chote-dabbe"
       />

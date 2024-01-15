@@ -1,7 +1,13 @@
 import axios from "axios";
 import React from "react";
 import { useState, useEffect } from "react";
-const ProgramForm = ({ onSaveProgram,  selectedProgram , addClick, setAddClick}) => {
+const ProgramForm = ({
+  setPrograms,
+  programs,
+  selectedProgram,
+  addClick,
+  setAddClick,
+}) => {
   const [selectedPrice, setSelectedPrice] = useState("");
   const [selectedDomain, setSelectedDomain] = useState("");
   const [checkbox, setCheckbox] = useState(false);
@@ -15,11 +21,11 @@ const ProgramForm = ({ onSaveProgram,  selectedProgram , addClick, setAddClick})
   const [eligible, setEligible] = useState("");
   const [image, setImage] = useState("");
   const [description, setDescription] = useState("");
-  const [editsave,seteditsave]=useState(false);
+  const [editsave, seteditsave] = useState(false);
 
   useEffect(() => {
     // Update form fields when a program is selected
-      if(!addClick){
+    if (!addClick) {
       setSelectedPrice(selectedProgram.selectedPrice);
       setSelectedDomain(selectedProgram.selectedDomain);
       setCheckbox(selectedProgram.checkbox);
@@ -33,25 +39,22 @@ const ProgramForm = ({ onSaveProgram,  selectedProgram , addClick, setAddClick})
       setEligible(selectedProgram.eligible);
       setImage(selectedProgram.image);
       setDescription(selectedProgram.description);
-      
-      }
-      else {
-        setAddClick(false);
-        setSelectedPrice("");
-        setSelectedDomain("");
-        setCheckbox(false);
-        setNameInput("");
-        setRadioProgram("");
-        setRadioRegistration("");
-        setUniversity("");
-        setCertificate("");
-        setFaculty("");
-        setDuration("");
-        setEligible("");
-        setImage("");
-        setDescription("");
-      }
-      
+    } else {
+      setAddClick(false);
+      setSelectedPrice("");
+      setSelectedDomain("");
+      setCheckbox(false);
+      setNameInput("");
+      setRadioProgram("");
+      setRadioRegistration("");
+      setUniversity("");
+      setCertificate("");
+      setFaculty("");
+      setDuration("");
+      setEligible("");
+      setImage("");
+      setDescription("");
+    }
   }, [selectedProgram, addClick, setAddClick]);
 
   const handleSelectPrice = (event) => {
@@ -65,7 +68,7 @@ const ProgramForm = ({ onSaveProgram,  selectedProgram , addClick, setAddClick})
   const handleCheckboxChange = (event) => {
     setCheckbox(event.target.checked);
   };
-  
+
   const handleName = (event) => {
     setNameInput(event.target.value);
   };
@@ -118,8 +121,9 @@ const ProgramForm = ({ onSaveProgram,  selectedProgram , addClick, setAddClick})
   };
 
   const handleSave = async () => {
-    // if(NameInput &&  radioProgram && radioRegistration && university && certificate && faculty  && duration && eligible && image && description && selectedPrice && selectedDomain ){
-      console.log(JSON.stringify({
+    if(NameInput &&  radioProgram && radioRegistration && university && certificate && faculty  && duration && eligible && image && description && selectedPrice && selectedDomain ){
+    console.log(
+      JSON.stringify({
         name: NameInput,
         program_type: radioProgram,
         registration_open: radioRegistration,
@@ -133,65 +137,81 @@ const ProgramForm = ({ onSaveProgram,  selectedProgram , addClick, setAddClick})
         selectedPrice,
         selectedDomain,
         checkbox,
-      }))
-      try {
-        const response = await axios.post("http://127.0.0.1:5000/hero/create", {
-  name: NameInput,
-  program_type: radioProgram,
-  registration_open: radioRegistration,
-  university,
-  certificate,
-  faculty,
-  duration,
-  eligible_criteria: eligible,
-  image_url: image,
-  description,
-  selectedPrice,
-  selectedDomain,
-  checkbox,
-});
+      })
+      
+    );
+    const a=JSON.stringify({
+      name: NameInput,
+      program_type: radioProgram,
+      registration_open: radioRegistration,
+      university,
+      certificate,
+      faculty,
+      duration,
+      eligible_criteria: eligible,
+      image_url: image,
+      description,
+      selectedPrice,
+      selectedDomain,
+      checkbox,
+    });
+    setPrograms([...programs, a]);
+    try {
+      const response = await axios.post("http://127.0.0.1:5000/hero/create", {
+        name: NameInput,
+        program_type: radioProgram,
+        registration_open: radioRegistration,
+        university,
+        certificate,
+        faculty,
+        duration,
+        eligible_criteria: eligible,
+        image_url: image,
+        description,
+        selectedPrice,
+        selectedDomain,
+        checkbox,
+      });
 
-    
-        if (response.ok) {
-          console.log("Program saved successfully!");
-    
-          // Update the list of programs
-          const newProgram = await response.json();
-          // setPrograms([...programs, newProgram]);
-          onSaveProgram(newProgram);
-          // Clear the form fields
-          setSelectedPrice("");
-          setSelectedDomain("");
-          setCheckbox(false);
-          setNameInput("");
-          setRadioProgram("");
-          setRadioRegistration("");
-          setUniversity("");
-          setCertificate("");
-          setFaculty("");
-          setDuration("");
-          setEligible("");
-          setImage("");
-          setDescription("");
-    
-          // Optionally, close the popup or perform any other UI updates
-          // setSelectedProgram(null);
-    
-        } else {
-          console.error("Failed to save program");
-          // Handle error
-        }
-      } catch (error) {
-        console.error("Error while saving program:", error);
+      if (response.ok) {
+        console.log("Program saved successfully!");
+
+        // Update the list of programs
+        const newProgram = await response.json();
+        setPrograms([...programs, newProgram]);
+        // onSaveProgram(newProgram);
+        {console.log(programs)}
+        // Clear the form fields
+        setSelectedPrice("");
+        setSelectedDomain("");
+        setCheckbox(false);
+        setNameInput("");
+        setRadioProgram("");
+        setRadioRegistration("");
+        setUniversity("");
+        setCertificate("");
+        setFaculty("");
+        setDuration("");
+        setEligible("");
+        setImage("");
+        setDescription("");
+
+        // Optionally, close the popup or perform any other UI updates
+        // setSelectedProgram(null);
+      } else {
+        console.error("Failed to save program");
         // Handle error
       }
+    } catch (error) {
+      console.error("Error while saving program:", error);
+      // Handle error
+    }
 
-    // }
-    // else{
-    //   alert("Please fill the required fields");
-    // }
-};
-
+    }
+    else{
+      alert("Please fill the required fields");
+    }
+  };
 
   return (
     <div>
@@ -253,7 +273,7 @@ const ProgramForm = ({ onSaveProgram,  selectedProgram , addClick, setAddClick})
           </div>
         </div>
         <h2> Information</h2>
-        <div className="can" style={{ display: "flex", gap: "20px"  }}>
+        <div className="can" style={{ display: "flex", gap: "20px" }}>
           <div>
             <label htmlFor="textInput">*Name: </label>
             <br />
@@ -268,7 +288,7 @@ const ProgramForm = ({ onSaveProgram,  selectedProgram , addClick, setAddClick})
           </div>
 
           <div>
-            <label>Program Type</label>
+            <label>*Program Type</label>
             <div>
               <label>
                 <input
@@ -294,7 +314,7 @@ const ProgramForm = ({ onSaveProgram,  selectedProgram , addClick, setAddClick})
           </div>
 
           <div>
-            <label>Registration Open</label>
+            <label>*Registration Open</label>
             <div>
               <label>
                 <input
@@ -322,7 +342,7 @@ const ProgramForm = ({ onSaveProgram,  selectedProgram , addClick, setAddClick})
 
         <div className="can" style={{ display: "flex", gap: "20px" }}>
           <div>
-            <label htmlFor="dropdown1">University Name/Partner</label>
+            <label htmlFor="dropdown1">*University Name/Partner</label>
             <br />
             <select
               id="dropdown1"
@@ -339,78 +359,78 @@ const ProgramForm = ({ onSaveProgram,  selectedProgram , addClick, setAddClick})
           </div>
 
           <div>
-          <label htmlFor="dropdown2">Certificate or Diploma</label>
-          <br />
-          <select
-            id="dropdown2"
-            value={certificate}
-            onChange={handleCertificate}
-            readOnly={selectedProgram && !editsave ? true : false}
-            className="chote-dabbe"
-          >
-            <option value="">Select...</option>
-            <option value="certificate">Certificate</option>
-            <option value="diploma">Diploma</option>
-          </select>
-        </div>
-
-        <div>
-          <label htmlFor="textField">Faculty Profile</label>
-          <br />
-          <input
-            type="text"
-            id="textField"
-            value={faculty}
-            onChange={handleFaculty}
-            readOnly={selectedProgram && !editsave ? true : false}
-            className="chote-dabbe"
-          />
-        </div>
-      </div>
-
-      <div className="can" style={{ display: "flex", gap: "20px" }}>
-        <div>
-          <label htmlFor="input1">Learning Hours/ Duration</label>
-          <br />
-          <input
-            type="text"
-            id="input1"
-            value={duration}
-            onChange={handleDuration}
-            readOnly={selectedProgram && !editsave ? true : false}
-            className="chote-dabbe"
-          />
-        </div>
-
-        <div>
-          <label htmlFor="input2">Eligible Criteria</label>
-          <br />
-          <input
-            type="text"
-            id="input2"
-            value={eligible}
-            onChange={handleEligiblity}
-            readOnly={selectedProgram && !editsave ? true : false}
-            className="chote-dabbe"
-          />
-        </div>
+            <label htmlFor="dropdown2">*Certificate or Diploma</label>
+            <br />
+            <select
+              id="dropdown2"
+              value={certificate}
+              onChange={handleCertificate}
+              readOnly={selectedProgram && !editsave ? true : false}
+              className="chote-dabbe"
+            >
+              <option value="">Select...</option>
+              <option value="certificate">Certificate</option>
+              <option value="diploma">Diploma</option>
+            </select>
+          </div>
 
           <div>
-            <label htmlFor="input3">Image URL</label>
+            <label htmlFor="textField">*Faculty Profile</label>
             <br />
             <input
-             type="text"
-             id="input3"
-             value={image}
-             onChange={handleImage}
-             className="chote-dabbe"
-             readOnly={selectedProgram && !editsave ? true : false}
+              type="text"
+              id="textField"
+              value={faculty}
+              onChange={handleFaculty}
+              readOnly={selectedProgram && !editsave ? true : false}
+              className="chote-dabbe"
+            />
+          </div>
+        </div>
+
+        <div className="can" style={{ display: "flex", gap: "20px" }}>
+          <div>
+            <label htmlFor="input1">*Learning Hours/ Duration</label>
+            <br />
+            <input
+              type="text"
+              id="input1"
+              value={duration}
+              onChange={handleDuration}
+              readOnly={selectedProgram && !editsave ? true : false}
+              className="chote-dabbe"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="input2">*Eligible Criteria</label>
+            <br />
+            <input
+              type="text"
+              id="input2"
+              value={eligible}
+              onChange={handleEligiblity}
+              readOnly={selectedProgram && !editsave ? true : false}
+              className="chote-dabbe"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="input3">*Image URL</label>
+            <br />
+            <input
+              type="text"
+              id="input3"
+              value={image}
+              onChange={handleImage}
+              className="chote-dabbe"
+              readOnly={selectedProgram && !editsave ? true : false}
             />
           </div>
         </div>
 
         <div className="can">
-          <label htmlFor="description">Description:</label>
+          <label htmlFor="description">*Description:</label>
           <br />
           <textarea
             id="description"
@@ -424,10 +444,7 @@ const ProgramForm = ({ onSaveProgram,  selectedProgram , addClick, setAddClick})
         {/* Right Buttons - Save Draft and Save */}
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           {/* Delete Button */}
-          <button 
-            type="button"
-            onClick={handleDelete}
-            >
+          <button type="button" onClick={handleDelete}>
             Delete
           </button>
 
@@ -437,13 +454,15 @@ const ProgramForm = ({ onSaveProgram,  selectedProgram , addClick, setAddClick})
               type="button"
               onClick={handleEdit}
               style={{ marginRight: "10px" }}
-              disabled={selectedProgram && !editsave ? false : true}>
+              disabled={selectedProgram && !editsave ? false : true}
+            >
               Edit
             </button>
-            <button 
+            <button
               type="button"
               onClick={handleSave}
-              disabled={(selectedProgram && !editsave) ? true : false}>
+              disabled={selectedProgram && !editsave ? true : false}
+            >
               Save
             </button>
           </div>

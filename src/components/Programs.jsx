@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import { Stack, Button} from '@mui/material';
 
 const Programs = ({ programs, setSelectedProgram, setAddClick}) => {
-  
-
   const handleCardClick = (program) => {
     setSelectedProgram(program);
     setAddClick(false);
@@ -11,10 +9,12 @@ const Programs = ({ programs, setSelectedProgram, setAddClick}) => {
 
   return (
     <Stack spacing={2}>
+      {console.log(programs[0])}
       {programs.map((program, index) => (
         <div key={index}>
           <Button variant="outlined" fullWidth onClick={() => handleCardClick(program)}>
-            {program.name} {/* Display program name or other relevant information */}
+            {console.log(program[0])}
+            {program[0].name} {/* Display program name or other relevant information */}
           </Button>
         </div>
       ))}
